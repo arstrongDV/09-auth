@@ -27,8 +27,8 @@ const NoteForm = () => {
 //     title: '',
 //     content: '',
 //     tag: 'Todo' as const
-//   });
-  const [errors, setErrors] = useState<Record<string, string>>({});
+//   });Partial<Record<keyof ToDoFormValues, string>>
+  const [errors, setErrors] = useState <Partial<Record<keyof ToDoFormValues, string>>>({});
 
   const { draft, setDraft, clearDraft } = useNoteDraftStore();
 
@@ -49,12 +49,15 @@ const handleCancel = () => back();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setDraft({...draft, [name]: value});
+        setDraft({
+            ...draft,
+            [name]: name === 'tag' ? value as ToDoFormValues['tag'] : value,
+        });
 
-        if(errors[name]){
+        if(errors[name as keyof ToDoFormValues]){
             setErrors(prev => {
                 const newErrors = { ...prev };
-                delete newErrors[name];
+                delete newErrors[name as keyof ToDoFormValues];
                 return newErrors;
             });
         }
@@ -65,7 +68,7 @@ const validate = () => {
     if (draft.title.length < 3) newErrors.title = "Title must be at least 3 characters";
     if (draft.content.length > 50) newErrors.content = "Content is too long";
     if (draft.content.length < 3) newErrors.content = "Content must be at least 3 characters";
-    if (!draft.content) newErrors.content = "Content is required";
+    // if (!draft.content) newErrors.content = "Content is required";
     if (!draft.tag) newErrors.tag = "Tag is required";
     
     setErrors(newErrors);

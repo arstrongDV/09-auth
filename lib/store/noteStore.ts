@@ -1,15 +1,14 @@
-import { Note, NoteTag } from '@/types/note';
-import { create } from 'zustand' 
-import { NotesData } from '../api/clientApi';
+import { create } from 'zustand'
+import { ToDoFormValues } from '@/components/NoteForm/NoteForm';
 import { persist } from 'zustand/middleware';
 
 interface Store {
-    draft: NotesData
-    setDraft: (note: NotesData) => void;
+    draft: ToDoFormValues
+    setDraft: (note: ToDoFormValues) => void;
     clearDraft: () => void;
 }
 
-const initialDraft: NotesData = {
+const initialDraft: ToDoFormValues = {
   title: '',
   content: '',
   tag: 'Todo',

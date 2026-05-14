@@ -27,9 +27,9 @@ const ProfileEdit = () => {
 
         if(res) {
             user && setUser({
-                username: username,
-                email: user.email,
-                avatar: user.avatar 
+                username: res.username,
+                email: res.email,
+                avatar: res.avatar 
             })
             router.push('/profile')
         };

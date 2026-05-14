@@ -6,7 +6,7 @@ export interface FetchNotesResponse {
     notes: Note[];
     totalPages: number;
 }
-interface FetchNotesProps {
+export interface FetchNotesProps {
     page?: number;
     search?: string;
     tag?: string;

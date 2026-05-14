@@ -1,6 +1,6 @@
 import Modal from "@/components/Modal/Modal";
 import NotePreview from "./NotePreview.client";
-import { fetchNote } from "@/lib/api/clientApi";
+import { fetchNote } from "@/lib/api/serverApi";
 import { QueryClient, dehydrate, HydrationBoundary, } from "@tanstack/react-query";
 
 interface NoteDetailsProps {
