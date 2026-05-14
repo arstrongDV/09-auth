@@ -9,7 +9,7 @@ interface Store {
     clearDraft: () => void;
 }
 
-const initialDraft = {
+const initialDraft: NotesData = {
   title: '',
   content: '',
   tag: 'Todo',
