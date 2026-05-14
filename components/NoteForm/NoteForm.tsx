@@ -39,8 +39,8 @@ const NoteForm = () => {
     const postToDoMutation = useMutation({
     mutationFn: (values: ToDoFormValues) => createNote(values),
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['notes']})
       clearDraft();
+      queryClient.invalidateQueries({queryKey: ['notes']})
       back();
     }
   })
@@ -64,12 +64,15 @@ const handleCancel = () => back();
     }
 
 const validate = () => {
-    const newErrors: Record<string, string> = {};
+    const newErrors: Partial<Record<keyof ToDoFormValues, string>> = {};
     if (draft.title.length < 3) newErrors.title = "Title must be at least 3 characters";
-    if (draft.content.length > 50) newErrors.content = "Content is too long";
-    if (!draft.content || draft.content.length < 3) newErrors.content = "Content must be at least 3 characters";
+    if (draft.content.length > 50) {
+        newErrors.content = "Content is too long";
+    } else if (!draft.content || draft.content.length < 3) {
+        newErrors.content = "Content must be at least 3 characters";
+    }
     if (!draft.tag) newErrors.tag = "Tag is required";
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
