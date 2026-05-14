@@ -3,13 +3,13 @@
 import React, { useEffect, useState } from 'react';
 import css from './EditProfilePage.module.css'
 import Image from 'next/image';
-import { getMe, updateMe } from '@/lib/api/clientApi';
+import { updateMe } from '@/lib/api/clientApi';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useRouter } from 'next/navigation';
-import { ApiError } from '@/app/api/api';
 
 const ProfileEdit = () => {
     const user = useAuthStore((state) => state.user);
+    const setUser = useAuthStore((state) => state.setUser);
     console.log("useruseruser: ", user);
     const [username, setUsername] = useState(user?.username ?? '');
     const router = useRouter();
@@ -25,7 +25,14 @@ const ProfileEdit = () => {
             username: formValue.username as string
         })
 
-        if(res) router.push('/profile');
+        if(res) {
+            user && setUser({
+                username: username,
+                email: user.email,
+                avatar: user.avatar 
+            })
+            router.push('/profile')
+        };
     };
 
     if(!user) return <p>Loading...</p>
@@ -56,7 +63,7 @@ const ProfileEdit = () => {
                         />
                     </div>
 
-                    <p>Email: user_email@example.com</p>
+                    <p>Email: {user.email}</p>
 
                     <div className={css.actions}>
                         <button type="submit" className={css.saveButton}>

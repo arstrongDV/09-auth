@@ -57,9 +57,10 @@
 
 
 import { NextRequest, NextResponse } from "next/server";
-import { api, ApiError } from "../../api";
+import { api } from "../../api";
 import { parse } from 'cookie';
 import { cookies } from 'next/headers';
+import { isAxiosError } from "axios";
 
 export async function POST(request: NextRequest,) {
     const body = await request.json();
@@ -94,13 +95,20 @@ export async function POST(request: NextRequest,) {
             { status: 401 }
         );
     } catch(error){
-        return NextResponse.json(
-            {
-                error: (error as ApiError).response?.data.message ?? (error as ApiError).message
-            },
-            {
-                status: (error as ApiError).status
-            }
-        )
+        if (isAxiosError(error)) {
+            return NextResponse.json(
+                { error: error.response?.data.message ?? error.message },
+                { status: error.response?.status }
+            )
+        }
+      return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+        // return NextResponse.json(
+        //     {
+        //         error: (error as ApiError).response?.data.message ?? (error as ApiError).message
+        //     },
+        //     {
+        //         status: (error as ApiError).status
+        //     }
+        // )
     }
 }

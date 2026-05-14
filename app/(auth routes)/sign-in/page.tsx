@@ -4,8 +4,9 @@ import React, { useState } from 'react'
 import css from './SignInPage.module.css'
 import { useRouter } from 'next/navigation';
 import { login, RegisterRequest } from '@/lib/api/clientApi';
-import { ApiError } from '@/app/api/api';
+// import { ApiError } from '@/app/api/api';
 import { useAuthStore } from '@/lib/store/authStore';
+import { isAxiosError } from 'axios';
 
 const SignIn = () => {
     const [error, setError] = useState('');
@@ -25,11 +26,17 @@ const SignIn = () => {
                 setError('Invalid email or password');
             }
         } catch(error){
-            setError(
-                (error as ApiError).response?.data?.message ??
-                (error as ApiError).message ??
-                'Oops... some error'
-            )
+            if (isAxiosError(error)) {
+                setError(
+                    error.response?.data.message ?? error.message ??
+                    'Oops... some error'
+                )
+            }
+            // setError(
+            //     (error as ApiError).response?.data?.message ??
+            //     (error as ApiError).message ??
+            //     'Oops... some error'
+            // )
         }
     }
 
